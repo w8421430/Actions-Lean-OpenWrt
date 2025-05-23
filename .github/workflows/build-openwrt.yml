@@ -30,7 +30,8 @@ on:
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: master
+  # 这里既可以是分支名，也可以是标签名 master 有时候编译有问题，用tag版本的稳定点
+  REPO_BRANCH: 20230609
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: gy.config
   DIY_P1_SH: diy-part1.sh
