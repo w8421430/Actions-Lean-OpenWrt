@@ -142,6 +142,19 @@ jobs:
         echo "FIRMWARE=$PWD" >> $GITHUB_OUTPUT
         echo "status=success" >> $GITHUB_OUTPUT
 
+    - name: Clean invalid file paths
+      id: clean-paths
+      if: steps.organize.outputs.status == 'success' && !cancelled()
+      run: |
+        cd ${{ steps.organize.outputs.FIRMWARE }}
+        find . -type f -print0 | while IFS= read -r -d '' file; do
+          new_file=$(echo "$file" | tr -dc '[:alnum:]_.-')  # 保留合法字符
+          if [ "$file" != "$new_file" ]; then
+            mv -v -- "$file" "$new_file"
+          fi
+        done
+        echo "status=success" >> $GITHUB_OUTPUT
+      
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
